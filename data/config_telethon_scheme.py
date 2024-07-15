@@ -588,7 +588,7 @@ class TelethonSendMessages:
             username = me.username  # Получаем username
             folder_path = 'stories'
             files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-            files.sort(key=lambda x: int(x.split('.')[0]))
+            # files.sort(key=lambda x: int(x.split('.')[0]))
             print(f'files: {files}')
             up_cnt = 0
             for file_name in files:
