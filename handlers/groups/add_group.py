@@ -160,7 +160,7 @@ async def process_add_few_channels(message: Message, state: FSMContext):
     uid = message.from_user.id
     channel_list = message.text.split('\n')
     print(channel_list)
-    for i, channel in enumerate(channel_list, 155):
+    for i, channel in enumerate(channel_list, 300):
         await asyncio.sleep(0.7)
         try:
             channel = await normalize_channel_link(channel)
