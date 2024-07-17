@@ -158,7 +158,7 @@ async def add_few_channels(message: Message, state: FSMContext):
 @router.message(AddFewChannels.input_list)
 async def process_add_few_channels(message: Message, state: FSMContext):
     cur_channels = await db.db_get_all_telegram_channels(message.from_user.id)
-    ch_i = len(cur_channels)+1+1000
+    ch_i = len(cur_channels)+1+1000+200
     uid = message.from_user.id
     channel_list = message.text.split('\n')
     print(channel_list)
