@@ -5,7 +5,7 @@ import re
 import os
 from datetime import timedelta, datetime
 from pprint import pprint
-
+from moviepy.editor import VideoFileClip
 import aiofiles
 import pytz
 from environs import Env
@@ -582,43 +582,49 @@ class TelethonSendMessages:
         # self.client = TelegramClient(self.session_name, self.api_id, self.api_hash, proxy=proxy)
 
     #   TEST FUNC
-    async def send_story(self, username=None, file_path=None):
+    async def send_story(self, username=None, folder_path='stories'):
         async with self.client:
             me = await self.client.get_me()
             username = me.username  # Получаем username
-            folder_path = 'stories'
             files = [f for f in os.listdir(folder_path) if os.path.isfile(os.path.join(folder_path, f))]
-            # files.sort(key=lambda x: int(x.split('.')[0]))
+
             print(f'files: {files}')
-            up_cnt = 0
             for file_name in files:
                 try:
                     await asyncio.sleep(5)
                     file_path = os.path.join(folder_path, file_name)
                     file = await self.client.upload_file(file_path)
-                    result = await self.client(functions.stories.SendStoryRequest(
-                        peer=username,
-                        media=types.InputMediaUploadedDocument(
+
+                    if file_name.lower().endswith('.mp4'):
+                        clip = VideoFileClip(file_path)
+                        duration = int(clip.duration)
+                        width, height = clip.size
+
+                        media = types.InputMediaUploadedDocument(
                             file=file,
                             mime_type='video/mp4',
                             attributes=[
                                 types.DocumentAttributeVideo(
-                                    duration=0,  # Продолжительность в секундах
-                                    w=0,  # Ширина видео
-                                    h=0,  # Высота видео
+                                    duration=duration,  # Продолжительность в секундах
+                                    w=width,  # Ширина видео
+                                    h=height,  # Высота видео
                                     supports_streaming=True
                                 )
                             ]
-                        ),
+                        )
+                    else:
+                        media = types.InputMediaUploadedPhoto(file=file)
+
+                    result = await self.client(functions.stories.SendStoryRequest(
+                        peer=username,
+                        media=media,
                         privacy_rules=[types.InputPrivacyValueAllowAll()],  # Сторис будет видна всем пользователям
                         pinned=True,
                         noforwards=False,  # Разрешаем пересылку
                     ))
-                    # print(result.stringify())  # Вывод результата для отладки
                     logger.warning(f'{username} story {file_name} uploaded')
                 except Exception as e:
                     logger.error(e)
-
 
     async def get_channel_linkage(self, channel_list: List):
         try:
