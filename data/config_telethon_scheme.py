@@ -614,7 +614,7 @@ class TelethonSendMessages:
                             mime_type='video/mp4',
                             attributes=[
                                 types.DocumentAttributeVideo(
-                                    duration=5,  # Продолжительность в секундах
+                                    duration=duration,  # Продолжительность в секундах
                                     w=width,  # Ширина видео
                                     h=height,  # Высота видео
                                     supports_streaming=True
