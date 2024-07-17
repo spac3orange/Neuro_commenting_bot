@@ -157,10 +157,12 @@ async def add_few_channels(message: Message, state: FSMContext):
 
 @router.message(AddFewChannels.input_list)
 async def process_add_few_channels(message: Message, state: FSMContext):
+    cur_channels = await db.db_get_all_telegram_channels(message.from_user.id)
+    ch_i = len(cur_channels)+1
     uid = message.from_user.id
     channel_list = message.text.split('\n')
     print(channel_list)
-    for i, channel in enumerate(channel_list, 500):
+    for i, channel in enumerate(channel_list, ch_i):
         await asyncio.sleep(0.7)
         try:
             channel = await normalize_channel_link(channel)
