@@ -582,6 +582,12 @@ class TelethonSendMessages:
         # self.client = TelegramClient(self.session_name, self.api_id, self.api_hash, proxy=proxy)
 
     #   TEST FUNC
+    import os
+    import asyncio
+    from telethon import TelegramClient, types, functions
+    from telethon.tl.types import InputPrivacyValueAllowAll
+    from moviepy.editor import VideoFileClip
+
     async def send_story(self, username=None, folder_path='stories'):
         async with self.client:
             me = await self.client.get_me()
@@ -594,11 +600,14 @@ class TelethonSendMessages:
                     await asyncio.sleep(5)
                     file_path = os.path.join(folder_path, file_name)
                     file = await self.client.upload_file(file_path)
+                    print(f'Uploaded file: {file}')
 
                     if file_name.lower().endswith('.mp4'):
+                        print(True)
                         clip = VideoFileClip(file_path)
                         duration = int(clip.duration)
                         width, height = clip.size
+                        clip.reader.close()  # Закрываем видео файл после получения информации
 
                         media = types.InputMediaUploadedDocument(
                             file=file,
@@ -615,6 +624,7 @@ class TelethonSendMessages:
                     else:
                         media = types.InputMediaUploadedPhoto(file=file)
 
+                    print(f'Media: {media}')
                     result = await self.client(functions.stories.SendStoryRequest(
                         peer=username,
                         media=media,
