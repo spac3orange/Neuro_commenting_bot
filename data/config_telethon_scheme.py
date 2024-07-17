@@ -598,9 +598,17 @@ class TelethonSendMessages:
                     file = await self.client.upload_file(file_path)
                     result = await self.client(functions.stories.SendStoryRequest(
                         peer=username,
-                        media=types.InputMediaUploadedPhoto(
+                        media=types.InputMediaUploadedDocument(
                             file=file,
-                            spoiler=False  # Выключаем спойлер, так как хотим видимость для всех
+                            mime_type='video/mp4',
+                            attributes=[
+                                types.DocumentAttributeVideo(
+                                    duration=0,  # Продолжительность в секундах
+                                    w=0,  # Ширина видео
+                                    h=0,  # Высота видео
+                                    supports_streaming=True
+                                )
+                            ]
                         ),
                         privacy_rules=[types.InputPrivacyValueAllowAll()],  # Сторис будет видна всем пользователям
                         pinned=True,
