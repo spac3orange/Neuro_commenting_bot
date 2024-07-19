@@ -168,7 +168,7 @@ async def process_add_few_channels(message: Message, state: FSMContext):
             channel = await normalize_channel_link(channel)
             # channel_id = await get_channel_id(channel)
             channel_id = i
-            await db.db_add_telegram_group(uid, channel, channel_id, 'нет')
+            await db.db_add_telegram_groupR(uid, channel, channel_id, 'нет')
             await message.answer(f'Канал {channel} добавлен')
             await asyncio.sleep(1)
 
