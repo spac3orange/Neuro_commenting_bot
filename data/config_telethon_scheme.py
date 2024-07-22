@@ -471,7 +471,7 @@ class TelethonConnect:
                                 linked_chat = 'нет'
                             if user_id in all_basic_users:
                                 if await db.get_comments_sent(user_id) < 1:
-                                    acc = random.choice(await accs_action.get_phones_with_comments_today_less_than('telegram_accounts', 20))
+                                    acc = random.choice(await accs_action.get_phones_with_comments_today_less_than('telegram_accounts', 50))
                                     acc_sex = await accs_action.get_sex_by_phone(acc)
                                 else:
                                     try:
@@ -490,7 +490,7 @@ class TelethonConnect:
                                     logger.error('No accounts with comments less than 7')
                                     continue
                             else:
-                                acc = random.choice(await accs_action.get_phones_with_comments_today_less_than(f'accounts_{user_id}', 20))
+                                acc = random.choice(await accs_action.get_phones_with_comments_today_less_than(f'accounts_{user_id}', 50))
                                 if acc:
                                     acc_sex = await accs_action.get_sex_by_phone(acc, uid=user_id)
                                     await accs_action.set_in_work(f'accounts_{user_id}', acc)
